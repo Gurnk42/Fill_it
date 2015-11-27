@@ -6,7 +6,7 @@
 /*   By: ebouther <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/11/27 13:44:36 by ebouther          #+#    #+#             */
-/*   Updated: 2015/11/27 17:23:46 by ebouther         ###   ########.fr       */
+/*   Updated: 2015/11/27 17:35:41 by ebouther         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@ static int	ft_new_struct(t_map **map)
 	(*map)->nxt_map = NULL;
 	(*map)->x = 0;
 	(*map)->y = 0;
+	(*map)->content = ft_strnew(0);
 	return (0);
 }
 
@@ -55,6 +56,10 @@ static int	ft_fill_struct(t_map **map, int fd)
 	pos = 0;
 	while (get_next_line(fd, &line))
 	{
+		if (ft_strlen(line) != 4 && ft_strlen(line) != 0)
+			return (-1);
+		else
+			(*map)->content = ft_strjoin((*map)->content, line);
 		last_pos = pos;
 		if (ft_strlen(line) > 0)
 		{
@@ -82,6 +87,7 @@ t_map		*ft_get_maps(int fd)
 	map->nxt_map = NULL;
 	map->x = 0;
 	map->y = 0;
+	map->content = ft_strnew(0);
 	if (ft_fill_struct(&map, fd) == -1)
 		return (NULL);
 	return (beg);
