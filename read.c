@@ -6,64 +6,91 @@
 /*   By: ebouther <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/11/27 13:44:36 by ebouther          #+#    #+#             */
-/*   Updated: 2015/11/27 14:33:34 by ebouther         ###   ########.fr       */
+/*   Updated: 2015/11/27 16:49:55 by ebouther         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "read.h"
 
-t_map	*get_maps(int fd)
+static int	ft_nb_occur(char *line, int c, int *first_pos)
+{
+	int	i;
+	int	len;
+
+	i = 0;
+	len = 0;
+	*first_pos = 0;
+	if (!line)
+		return (-1);
+	while (line[i])
+	{
+		if (line[i] == c)
+		{
+			if (*first_pos == 0)
+				*first_pos = i;
+			len++;
+		}
+		i++;
+	}
+	return (len);
+}
+
+static int	ft_fill_struct(t_map **map, int fd)
+{	
+	char	*line;
+	int		last_pos;
+	int		pos;
+	
+	pos = 0;
+	while (get_next_line(fd, &line))
+	{
+		last_pos = pos;
+		if (ft_strlen(line) > 0)
+		{
+			if (ft_nb_occur(line, '#', &pos) > (*map)->x)
+				(*map)->x = ft_nb_occur(line, '#', &pos);
+			if (ft_nb_occur(line, '#', &pos) > 0)
+				(*map)->y++;
+		
+			ft_putstr("x: ");
+			ft_putnbr((*map)->x);			
+			ft_putstr("last: ");
+			ft_putnbr(last_pos);
+			ft_putstr("pos: ");
+			ft_putnbr(pos);
+			ft_putstr("\n");
+
+			if ((*map)->x == 2 && pos != last_pos)
+				(*map)->x++;
+
+
+		}
+		else
+		{
+			ft_putstr("  ");
+			if (!((*map)->nxt_map = (t_map *)malloc(sizeof(**map))))
+				return (-1);
+			(*map) = (*map)->nxt_map;
+			(*map)->nxt_map = NULL;
+			(*map)->x = 0;
+			(*map)->y = 0;
+		}
+	}
+	return (0);
+}
+
+t_map	*ft_get_maps(int fd)
 {
 	t_map	*map;
 	t_map	*beg;
 
-	char	*line;
 	if (fd < 0 || !(map = (t_map *)malloc(sizeof(*map))))
 		return (NULL);
 	beg = map;
 	map->nxt_map = NULL;
 	map->x = 0;
 	map->y = 0;
-	while (get_next_line(fd, &line))
-	{
-		if (ft_strlen(line) > 0)
-			map->x = ft_strlen(line);
-		else
-		{
-			if (!(map->nxt_map = (t_map *)malloc(sizeof(*map))))
-				return (NULL);
-			map = map->nxt_map;
-			map->nxt_map = NULL;
-			map->y = -1;
-		}
-		map->y++;
-	}
+	if (ft_fill_struct(&map, fd) == -1)
+		return (NULL);
 	return (beg);
 }
-
-
-#include <fcntl.h>
-int main(int ac, char **av)
-{
-	t_map	*map;
-	int		fd;
-
-	if (ac == 2)
-	{
-		fd = open(av[1], O_RDONLY);
-
-		map = get_maps(fd);
-		while (map->nxt_map)
-		{
-			ft_putnbr(map->x);
-			ft_putchar('\n');
-			ft_putnbr(map->y);
-			ft_putchar('\n');
-			ft_putchar('\n');
-			map = map->nxt_map;
-		}
-		close(fd);
-	}
-	return (0);
-}
-
