@@ -6,7 +6,7 @@
 /*   By: ebouther <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/11/27 13:44:36 by ebouther          #+#    #+#             */
-/*   Updated: 2015/11/27 17:35:41 by ebouther         ###   ########.fr       */
+/*   Updated: 2015/11/28 15:31:32 by ebouther         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,6 +47,23 @@ static int	ft_nb_occur(char *line, int c, int *first_pos)
 	return (len);
 }
 
+static void	ft_getxy(t_map **map, char *line, int c)
+{
+	static int	last_pos = 0;
+	int			pos;
+	int			nb;
+
+	pos = 0;
+	nb = ft_nb_occur(line, c, &pos);
+	if (nb > (*map)->x)
+		(*map)->x = nb;
+	if (nb > 0)
+		(*map)->y++;
+	if ((*map)->x == 2 && last_pos == 2 && (pos != last_pos))
+		(*map)->x++;
+	last_pos = pos;
+}
+
 static int	ft_fill_struct(t_map **map, int fd)
 {
 	char	*line;
@@ -62,14 +79,7 @@ static int	ft_fill_struct(t_map **map, int fd)
 			(*map)->content = ft_strjoin((*map)->content, line);
 		last_pos = pos;
 		if (ft_strlen(line) > 0)
-		{
-			if (ft_nb_occur(line, '#', &pos) > (*map)->x)
-				(*map)->x = ft_nb_occur(line, '#', &pos);
-			if (ft_nb_occur(line, '#', &pos) > 0)
-				(*map)->y++;
-			if ((*map)->x == 2 && pos != last_pos)
-				(*map)->x++;
-		}
+			ft_getxy(map, line, '#');
 		else if (ft_new_struct(map) == -1)
 			return (-1);
 	}
