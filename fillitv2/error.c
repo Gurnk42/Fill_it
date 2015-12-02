@@ -6,7 +6,7 @@
 /*   By: ebouther <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/11/30 20:21:39 by ebouther          #+#    #+#             */
-/*   Updated: 2015/12/02 17:32:13 by ebouther         ###   ########.fr       */
+/*   Updated: 2015/12/02 17:34:58 by ebouther         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,6 +89,8 @@ void	ft_check_tetriminos(t_map *map, int tetriminos)
 	content = map->content;
 	while (content[i])
 	{
+		if (content[i] != '.' || content[i] != '#' || content[i] != '\n')
+			ft_error_exit();
 		if (content[i] == '#')
 		{
 			if (occur == 0)
