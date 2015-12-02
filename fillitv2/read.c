@@ -6,7 +6,7 @@
 /*   By: ebouther <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/11/27 13:44:36 by ebouther          #+#    #+#             */
-/*   Updated: 2015/12/02 16:43:28 by ebouther         ###   ########.fr       */
+/*   Updated: 2015/12/02 16:53:45 by ebouther         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,6 +94,7 @@ static int	ft_fill_struct(t_map **map, int fd, int tetriminos)
 	}
 	if (env.nb_of_line != 4)
 		return (-1);
+	ft_check_tetriminos(*map, tetriminos);
 	(*map)->content = ft_strjoin((*map)->content, ft_add_to_map(tetriminos));
 	return (0);
 }
