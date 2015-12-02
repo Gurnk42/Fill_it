@@ -1,0 +1,83 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   error.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ebouther <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2015/11/30 20:21:39 by ebouther          #+#    #+#             */
+/*   Updated: 2015/12/02 16:43:30 by ebouther         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "read.h"
+
+void	ft_error_exit(void)
+{
+	ft_putstr("error\n");
+	exit(0);
+}
+
+char	*ft_add_to_line(int tetriminos)
+{
+	char	*ret;
+
+	if (!(ret = ft_strnew(0)))
+		ft_error_exit();
+	if (tetriminos <= 2)
+		return (ret);
+	while (tetriminos - 4)
+	{
+		ret = ft_strjoin(ret, ft_strdup("."));
+		tetriminos--;
+	}
+	return (ret);
+}
+
+char	*ft_add_to_map(int tetriminos)
+{
+	char	*ret;
+	int		i;
+
+	i = tetriminos - 4;
+	if (!(ret = ft_strnew(0)))
+		ft_error_exit();
+	if (tetriminos <= 2)
+		return (ret);
+	while (i--)
+		ret = ft_strjoin(ret, ft_strjoin(ft_add_to_line(tetriminos + 4), ft_strdup("\n")));
+	return (ret);
+}
+
+static void	ft_check_tetriminos_1(char *content, int tetriminos)
+{
+	if ((content[tetriminos + 1] == '#' && content[tetriminos] == '#' && content[tetriminos + 2] == '#')
+			|| (content[tetriminos + 1] == '#' && content[tetriminos + 2] == '#' && content[(tetriminos + 1) * 2] == '#')
+			|| (content[tetriminos + 1] == '#' && content[tetriminos] == '#' && content[(tetriminos + 1) * 2] == '#'))
+		ft_putstr("OK");
+	else
+		ft_putstr("ERROR");
+}
+
+void	ft_check_tetriminos(t_map *map, int tetriminos)
+{	
+	char	*content;
+	int		i;
+	int		occur;
+
+	i = 0;
+	occur = 0;
+	content = map->content;
+	while (content[i])
+	{
+		if (content[i] == '#')
+		{
+			if (occur == 1)
+				ft_check_tetriminos_1(content, tetriminos);
+			occur++;
+		}
+		i++;
+	}
+	if (occur != 4)
+		ft_error_exit();
+}
