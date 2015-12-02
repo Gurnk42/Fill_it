@@ -6,7 +6,7 @@
 /*   By: ebouther <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/11/30 20:21:39 by ebouther          #+#    #+#             */
-/*   Updated: 2015/12/02 17:34:58 by ebouther         ###   ########.fr       */
+/*   Updated: 2015/12/02 17:36:47 by ebouther         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,7 @@ static void	ft_check_tetriminos_1(char *content, int tetriminos)
 {
 	if (tetriminos <= 2)
 		tetriminos = 4;
-	if ((content[tetriminos + 1] == '#' && content[tetriminos] == '#' && content[tetriminos + 2] == '#')
+	if (!((content[tetriminos + 1] == '#' && content[tetriminos] == '#' && content[tetriminos + 2] == '#')
 			|| (content[tetriminos + 1] == '#' && content[tetriminos + 2] == '#' && content[(tetriminos + 1) * 2] == '#')
 			|| (content[tetriminos + 1] == '#' && content[tetriminos] == '#' && content[(tetriminos + 1) * 2] == '#')
 			|| (content[tetriminos + 1] == '#' && content[tetriminos + 2] == '#' && content[tetriminos + 3] == '#')
@@ -72,9 +72,7 @@ static void	ft_check_tetriminos_1(char *content, int tetriminos)
 			|| (content[1] == '#' && content[tetriminos] == '#' && content[tetriminos + 1] == '#')
 			|| (content[tetriminos + 1] == '#' && content[tetriminos + 2] == '#' && content[(tetriminos + 1) * 2 + 1] == '#')
 			|| (content[tetriminos + 1] == '#' && content[tetriminos] == '#' && content[(tetriminos + 1) * 2 - 1] == '#')
-			|| (content[1] == '#' && content[tetriminos + 2] == '#' && content[tetriminos + 3] == '#'))
-		ft_putstr("OK");
-	else
+			|| (content[1] == '#' && content[tetriminos + 2] == '#' && content[tetriminos + 3] == '#')))
 		ft_error_exit();
 }
 
@@ -89,7 +87,7 @@ void	ft_check_tetriminos(t_map *map, int tetriminos)
 	content = map->content;
 	while (content[i])
 	{
-		if (content[i] != '.' || content[i] != '#' || content[i] != '\n')
+		if (content[i] != '.' && content[i] != '#' && content[i] != '\n')
 			ft_error_exit();
 		if (content[i] == '#')
 		{
